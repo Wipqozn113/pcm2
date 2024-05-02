@@ -16,18 +16,18 @@
         /***********/
         /* Getters */
         /***********/
-        public string GetFullUrl()
+        public string FullUrl
         {
-            if(_baseUrl is null)
-                throw new ArgumentNullException(nameof(_baseUrl));
+            get
+            {
+                if (_baseUrl is null)
+                    throw new ArgumentNullException(nameof(_baseUrl));
 
-            return _baseUrl + _query;
+                return _baseUrl + _query;
+            }
         }
 
-        public string GetQueryString()
-        {
-            return _query;
-        }
+        public string QueryString => _query;
 
         /******************/
         /* Query Updaters */
