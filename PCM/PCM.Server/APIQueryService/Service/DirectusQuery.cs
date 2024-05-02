@@ -29,34 +29,52 @@
 
         public string QueryString => _query;
 
+        /****************/
+        /* Field Methos */
+        /****************/
+
+        public DirectusQuery SetFields(IEnumerable<string> fields)
+        {
+            UpdateFields(string.Join(",", fields));
+
+            return this;
+        }
+
+        public DirectusQuery SetFields(string fields)
+        {
+            UpdateFields(fields);
+
+            return this;
+        }
+
         /******************/
         /* Query Updaters */
         /******************/
 
         public DirectusQuery IsEqual(string name, string value)
         {
-            UpdateQuery(name, value, "eq");
+            UpdateFilter(name, value, "eq");
 
             return this;
         }
 
         public DirectusQuery IsEqual(string name, long value)
         {
-            UpdateQuery(name, value, "eq");
+            UpdateFilter(name, value, "eq");
 
             return this;
         }
 
         public DirectusQuery IsNotEqual(string name, string value)
         {
-            UpdateQuery(name, value, "neq");
+            UpdateFilter(name, value, "neq");
 
             return this;
         }
 
         public DirectusQuery IsNotEqual(string name, long value)
         {
-            UpdateQuery(name, value, "neq");
+            UpdateFilter(name, value, "neq");
 
             return this;
         }
@@ -64,102 +82,86 @@
 
         public DirectusQuery LessThan(string name, long value)
         {
-            UpdateQuery(name, value, "lt");
+            UpdateFilter(name, value, "lt");
 
             return this;
         }
 
         public DirectusQuery LessThan(string name, string value)
         {
-            UpdateQuery(name, value, "lt");
+            UpdateFilter(name, value, "lt");
 
             return this;
         }
 
         public DirectusQuery LessThanOrEqual(string name, string value)
         {
-            UpdateQuery(name, value, "lte");
+            UpdateFilter(name, value, "lte");
 
             return this;
         }
 
         public DirectusQuery LessThanOrEquall(string name, long value)
         {
-            UpdateQuery(name, value, "lte");
+            UpdateFilter(name, value, "lte");
 
             return this;
         }
 
         public DirectusQuery GreaterThan(string name, long value)
         {
-            UpdateQuery(name, value, "gt");
+            UpdateFilter(name, value, "gt");
 
             return this;
         }
 
         public DirectusQuery GreaterThan(string name, string value)
         {
-            UpdateQuery(name, value, "gt");
+            UpdateFilter(name, value, "gt");
 
             return this;
         }
 
         public DirectusQuery GreaterThanOrEqual(string name, string value)
         {
-            UpdateQuery(name, value, "gte");
+            UpdateFilter(name, value, "gte");
 
             return this;
         }
 
         public DirectusQuery GreaterThanOrEquall(string name, long value)
         {
-            UpdateQuery(name, value, "gte");
+            UpdateFilter(name, value, "gte");
 
             return this;
         }
 
         public DirectusQuery In<T>(string name, IEnumerable<T> values) where T : class
         {
-            string value = "";
-            foreach(var val in values)
-            {
-                if (!string.IsNullOrEmpty(value))
-                    value += ",";
-
-                value += val.ToString();
-            }
-
-            UpdateQuery(name, value, "in");
+            var value = string.Join(",", values);
+            UpdateFilter(name, value, "in");
 
             return this;
         }
 
         public DirectusQuery NotIn<T>(string name, IEnumerable<T> values) where T : class
         {
-            string value = "";
-            foreach (var val in values)
-            {
-                if (!string.IsNullOrEmpty(value))
-                    value += ",";
-
-                value += val.ToString();
-            }
-
-            UpdateQuery(name, value, "nin");
+            var value = string.Join(",", values);
+            UpdateFilter(name, value, "nin");
 
             return this;
         }
 
         public DirectusQuery IsNull(string name)
         {
-            UpdateQuery($"[{name}][null]");
+            UpdateFilter($"[{name}][null]");
 
             return this;
         }
 
         public DirectusQuery IsNotNull(string name)
         {
-            UpdateQuery($"[{name}][nnull]");
+            UpdateFilter($"[{name}][nnull]");
 
             return this;
         }
@@ -168,11 +170,11 @@
         {
             if(caseSensitive)
             {
-                UpdateQuery(name, value, "contains");
+                UpdateFilter(name, value, "contains");
             }
             else
             {
-                UpdateQuery(name, value, "icontains");
+                UpdateFilter(name, value, "icontains");
             }
 
             return this;
@@ -180,7 +182,7 @@
 
         public DirectusQuery DoesNotContains(string name, string value)
         {
-            UpdateQuery(name, value, "ncontains");
+            UpdateFilter(name, value, "ncontains");
 
             return this;
         }
@@ -189,11 +191,11 @@
         {
             if (caseSensitive)
             {
-                UpdateQuery(name, value, "starts_with");
+                UpdateFilter(name, value, "starts_with");
             }
             else
             {
-                UpdateQuery(name, value, "istarts_with");
+                UpdateFilter(name, value, "istarts_with");
             }
 
             return this;
@@ -203,11 +205,11 @@
         {
             if (caseSensitive)
             {
-                UpdateQuery(name, value, "nstarts_with");
+                UpdateFilter(name, value, "nstarts_with");
             }
             else
             {
-                UpdateQuery(name, value, "instarts_with");
+                UpdateFilter(name, value, "instarts_with");
             }
 
             return this;
@@ -217,11 +219,11 @@
         {
             if (caseSensitive)
             {
-                UpdateQuery(name, value, "ends_with");
+                UpdateFilter(name, value, "ends_with");
             }
             else
             {
-                UpdateQuery(name, value, "iends_with");
+                UpdateFilter(name, value, "iends_with");
             }
 
             return this;
@@ -231,11 +233,11 @@
         {
             if (caseSensitive)
             {
-                UpdateQuery(name, value, "nends_with");
+                UpdateFilter(name, value, "nends_with");
             }
             else
             {
-                UpdateQuery(name, value, "inends_with");
+                UpdateFilter(name, value, "inends_with");
             }
 
             return this;
@@ -252,7 +254,7 @@
             }
 
             var value = $"{lowerValue},{higherValue}";
-            UpdateQuery(name, value, "between");
+            UpdateFilter(name, value, "between");
 
             return this;                
         }
@@ -268,43 +270,51 @@
             }
 
             var value = $"{lowerValue},{higherValue}";
-            UpdateQuery(name, value, "nbetween");
+            UpdateFilter(name, value, "nbetween");
 
             return this;
         }
 
         public DirectusQuery IsEmpty(string name)
         {
-            UpdateQuery($"[{name}][empty]");
+            UpdateFilter($"[{name}][empty]");
 
             return this;
         }
 
         public DirectusQuery IsNotEmpty(string name)
         {
-            UpdateQuery($"[{name}][nempty]");
+            UpdateFilter($"[{name}][nempty]");
 
             return this;
         }
 
+
+
         /*******************/
         /* Private Methods */
         /*******************/
-        private void UpdateQuery(string query)
+        private void UpdateFields(string fields)
         {
-            _query += string.IsNullOrEmpty(_query) ? "?" : "&";
+            _query += string.IsNullOrEmpty(_query) ? "?fields" : "&fields";
             _query += query;
         }
 
-        private void UpdateQuery(string name, string value, string condition)
+        private void UpdateFilter(string query)
         {
-            _query += string.IsNullOrEmpty(_query) ? "?" : "&";
+            _query += string.IsNullOrEmpty(_query) ? "?filter" : "&filter";
+            _query += query;
+        }
+
+        private void UpdateFilter(string name, string value, string condition)
+        {
+            _query += string.IsNullOrEmpty(_query) ? "?filter" : "&filter";
             _query += $"[{name}][{condition}]={value}";
         }
 
-        private void UpdateQuery(string name, long value, string condition)
+        private void UpdateFilter(string name, long value, string condition)
         {
-            _query += string.IsNullOrEmpty(_query) ? "?" : "&";
+            _query += string.IsNullOrEmpty(_query) ? "?filter" : "&filter";
             _query += $"[{name}][_{condition}]={value}";
         }
 

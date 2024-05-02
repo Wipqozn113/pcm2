@@ -21,7 +21,7 @@ namespace PCM.Server.Controllers
         [HttpGet(Name = "GetLoot")]
         public IEnumerable<Loot> Get()
         {
-            return _apiQueryService.GetLoot();
+            return _apiQueryService.GetLoot(ConfigSettings.PartyLevel);
         }
     }
 }

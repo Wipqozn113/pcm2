@@ -13,13 +13,13 @@ namespace PCM.Server.APIQueryService.Service
             _baseUrl = ConfigSettings.DirectusUrl;
         }
 
-        private List<T> GetItems<T>(string itemName)
+        private List<T> GetItems<T>(string itemName, DirectusQuery query)
         {
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(_baseUrl);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var response = client.GetAsync($"/items/{itemName}").Result;
+                var response = client.GetAsync($"/items/{itemName}{query.QueryString}").Result;
                 response.EnsureSuccessStatusCode();
 
                 var root = JsonSerializer.Deserialize<Root<T>>(response.Content.ReadAsStream(), new JsonSerializerOptions
@@ -31,9 +31,12 @@ namespace PCM.Server.APIQueryService.Service
             }
         }
 
-        public List<Loot> GetLoot()
+        public List<Loot> GetLoot(int partyLevel)
         {
-            return GetItems<Loot>("loot");
+            var query = new DirectusQuery();
+            query.IsEqual("player_level", partyLevel);
+
+            return GetItems<Loot>("loot", query);
         }
     }
 }
