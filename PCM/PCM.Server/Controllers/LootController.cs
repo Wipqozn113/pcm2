@@ -15,7 +15,7 @@ namespace PCM.Server.Controllers
         public LootController(ILogger<LootController> logger)
         {
             _logger = logger;
-            _apiQueryService = new QueryService("http://127.0.0.1:8055/");
+            _apiQueryService = new QueryService();
         }
 
         [HttpGet(Name = "GetLoot")]

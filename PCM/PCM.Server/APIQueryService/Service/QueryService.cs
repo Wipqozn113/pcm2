@@ -8,9 +8,9 @@ namespace PCM.Server.APIQueryService.Service
     {
         private string _baseUrl { get; set; }
 
-        public QueryService(string baseUrl)
+        public QueryService()
         {
-            _baseUrl = baseUrl;
+            _baseUrl = ConfigSettings.DirectusUrl;
         }
 
         private List<T> GetItems<T>(string itemName)
@@ -21,6 +21,7 @@ namespace PCM.Server.APIQueryService.Service
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var response = client.GetAsync($"/items/{itemName}").Result;
                 response.EnsureSuccessStatusCode();
+
                 var root = JsonSerializer.Deserialize<Root<T>>(response.Content.ReadAsStream(), new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
