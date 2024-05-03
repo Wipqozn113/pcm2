@@ -19,7 +19,7 @@ namespace PCM.Server.APIQueryService.Service
             {
                 client.BaseAddress = new Uri(_baseUrl);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var response = client.GetAsync($"/items/{itemName}{query.QueryString}").Result;
+                var response = client.GetAsync($"/items/{itemName}{query.GetQueryString()}").Result;
                 response.EnsureSuccessStatusCode();
 
                 var root = JsonSerializer.Deserialize<Root<T>>(response.Content.ReadAsStream(), new JsonSerializerOptions

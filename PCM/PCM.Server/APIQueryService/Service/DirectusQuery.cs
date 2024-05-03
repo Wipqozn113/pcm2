@@ -1,10 +1,16 @@
-﻿namespace PCM.Server.APIQueryService.Service
+﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
+using System.Collections;
+using System.Reflection.Metadata.Ecma335;
+
+namespace PCM.Server.APIQueryService.Service
 {
     public class DirectusQuery
     {
-        private string _query { get; set; } = "";
-
         private string? _baseUrl { get; set; }
+
+        private List<string> _fields { get; set; } = new List<string>();
+
+        private List<string> _filters { get; set; } = new List<string>();
 
         public DirectusQuery() { }
 
@@ -23,26 +29,50 @@
                 if (_baseUrl is null)
                     throw new ArgumentNullException(nameof(_baseUrl));
 
-                return _baseUrl + _query;
+                return _baseUrl + GetQueryString();
             }
         }
 
-        public string QueryString => _query;
-
-        /****************/
-        /* Field Methos */
-        /****************/
-
-        public DirectusQuery SetFields(IEnumerable<string> fields)
+        public string GetQueryString()
         {
-            UpdateFields(string.Join(",", fields));
+            var query = "";
+
+            if (_fields.Any() || _filters.Any())
+                query = "?";
+
+            if (_fields.Any())
+                query += "fields=" + string.Join(",", _fields);
+            
+            if(_filters.Any())
+            {
+                if(query.Length > 1) query += "&";
+                query += string.Join("&", _filters);
+            }                
+
+            return query;
+        }
+
+        /*****************/
+        /* Field Methods */
+        /*****************/
+
+        public DirectusQuery AddField(string fieldName)
+        {
+            _fields.Add(fieldName);
 
             return this;
         }
 
-        public DirectusQuery SetFields(string fields)
+        public DirectusQuery AddFields(IEnumerable<string> fields)
         {
-            UpdateFields(fields);
+            _fields.AddRange(fields);
+
+            return this;
+        }
+
+        public DirectusQuery SetFields(IEnumerable<string> fields)
+        {
+            _fields = fields.ToList();
 
             return this;
         }
@@ -294,28 +324,22 @@
         /*******************/
         /* Private Methods */
         /*******************/
-        private void UpdateFields(string fields)
-        {
-            _query += string.IsNullOrEmpty(_query) ? "?fields" : "&fields";
-            _query += query;
-        }
-
         private void UpdateFilter(string query)
         {
-            _query += string.IsNullOrEmpty(_query) ? "?filter" : "&filter";
-            _query += query;
+            if (!query.StartsWith("filter"))
+                query = $"filter{query}";
+
+            _filters.Add(query);
         }
 
         private void UpdateFilter(string name, string value, string condition)
         {
-            _query += string.IsNullOrEmpty(_query) ? "?filter" : "&filter";
-            _query += $"[{name}][{condition}]={value}";
+            _filters.Add($"filter[{name}][{condition}]={value}");
         }
 
         private void UpdateFilter(string name, long value, string condition)
         {
-            _query += string.IsNullOrEmpty(_query) ? "?filter" : "&filter";
-            _query += $"[{name}][_{condition}]={value}";
+            _filters.Add($"filter[{name}][_{condition}]={value}");
         }
 
     }
