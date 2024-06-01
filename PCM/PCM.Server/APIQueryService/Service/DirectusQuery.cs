@@ -334,12 +334,26 @@ namespace PCM.Server.APIQueryService.Service
 
         private void UpdateFilter(string name, string value, string condition)
         {
-            _filters.Add($"filter[{name}][{condition}]={value}");
+            if(name.Contains("."))
+            {
+                var names = name.Split('.');
+                name = "";
+                foreach(var n in names)
+                {
+                    name += $"[{n}]";
+                }
+            }
+            else
+            {
+                name = $"[{name}]";
+            }
+
+            _filters.Add($"filter{name}[_{condition}]={value}");
         }
 
         private void UpdateFilter(string name, long value, string condition)
         {
-            _filters.Add($"filter[{name}][_{condition}]={value}");
+            UpdateFilter(name, value.ToString(), condition);
         }
 
     }

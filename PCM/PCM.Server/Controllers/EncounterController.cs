@@ -7,22 +7,22 @@ namespace PCM.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class LootController : Controller
+    public class EncounterController : Controller
     {
         private QueryService _apiQueryService { get; set; }
 
-        private readonly ILogger<LootController> _logger;
+        private readonly ILogger<EncounterController> _logger;
 
-        public LootController(ILogger<LootController> logger)
+        public EncounterController(ILogger<EncounterController> logger)
         {
             _logger = logger;
             _apiQueryService = new QueryService();
         }
 
-        [HttpGet(Name = "GetLoot")]
-        public LootAPIModel? Get(int id)
+        [HttpGet(Name = "GetEncounter")]
+        public EncounterAPIModel Get(int encounterId)
         {
-            return LootAPIModel.Create(_apiQueryService, id);
+            return EncounterAPIModel.Create(_apiQueryService, encounterId);
         }
     }
 }
