@@ -77,6 +77,14 @@ namespace PCM.Server.APIQueryService.Service
             return this;
         }
 
+        public DirectusQuery IncludeRelatedFields(int depth = 1)
+        {
+            var field = Enumerable.Repeat("*", depth + 1);
+            _fields.Add(string.Join(".", field));
+
+            return this;
+        }
+
         /******************/
         /* Query Updaters */
         /******************/

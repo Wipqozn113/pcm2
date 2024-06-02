@@ -20,7 +20,7 @@ namespace PCM.Server.Controllers
         }
 
         [HttpGet(Name = "GetEncounter")]
-        public EncounterAPIModel Get(int encounterId)
+        public EncounterAPIModel? Get(int encounterId)
         {
             return EncounterAPIModel.Create(_apiQueryService, encounterId);
         }

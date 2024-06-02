@@ -21,7 +21,29 @@ namespace PCM.Server.APIQueryService.Models
         [JsonPropertyName("dashboard_export")]
         public string DashboardExport { get; set; } = string.Empty;
 
-        public List<int> Loot { get; set; } = new List<int>();
+        [JsonIgnore]
+        public List<int> Loot
+        {
+            get
+            {
+                return EncounterLoots.Select(x => x.LootId).ToList();
+            }
+        }
+
+        [JsonPropertyName("loot")]
+        public List<EncounterLoot> EncounterLoots { get; set; } = new List<EncounterLoot>();
+
+        public class EncounterLoot
+        {
+            [JsonPropertyName("id")]
+            public int Id { get; set; }
+
+            [JsonPropertyName("encounter_id")]
+            public int EncounterId { get; set; }
+
+            [JsonPropertyName("loot_id")]
+            public int LootId { get; set; }
+        }
     }
 
     public class Monster

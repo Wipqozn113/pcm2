@@ -22,6 +22,7 @@ namespace PCM.Server.APIQueryService.Service
                 var url = $"/items/{itemName}{query.GetQueryString()}";
                 var response = client.GetAsync(url).Result;
                 response.EnsureSuccessStatusCode();
+                var test = response.Content.ReadAsStringAsync().Result;
 
                 var root = JsonSerializer.Deserialize<Root<T>>(response.Content.ReadAsStream(), new JsonSerializerOptions
                 {
@@ -51,9 +52,32 @@ namespace PCM.Server.APIQueryService.Service
         public Encounter? GetEncounter(int encounterId)
         {
             var query = new DirectusQuery();
-            query.IsEqual("id", encounterId);
+            query.IsEqual("id", encounterId).IncludeRelatedFields();
 
             return GetItems<Encounter>("encounter", query).FirstOrDefault();
+        }
+
+        public Session? GetSession(int sessionId)
+        {
+            var query = new DirectusQuery();
+            query.IsEqual("id", sessionId).IncludeRelatedFields();
+
+            return GetItems<Session>("session", query).FirstOrDefault();
+        }
+
+        public Session? GetNextSession()
+        {
+            var query = new DirectusQuery();
+            query.IncludeRelatedFields();
+
+            var sessions = GetItems<Session>("session", query);
+            if (sessions is null)
+                return null;
+
+           return sessions
+                .Where(x => DateOnly.FromDateTime(DateTime.Now) <= x.SessionDateOnly)
+                .OrderBy(x => x.SessionDateOnly)
+                .FirstOrDefault();
         }
     }
 }
