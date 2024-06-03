@@ -8,13 +8,29 @@ interface WeatherForecast {
   summary: string;
 }
 
+interface Session {
+  sessionDate: string;
+  overview: string;
+  notes: string;
+  encounters: Encounter[];
+}
+
+interface Encounter {
+  id: number;
+  name: string;
+  gold: number;
+  partyLevel: number;
+  difficulty: string;
+  dashboardExport: string;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-  public forecasts: WeatherForecast[] = [];
+  public nextSession!: Session;
 
   constructor(private http: HttpClient) {}
 
@@ -23,14 +39,28 @@ export class AppComponent implements OnInit {
   }
 
   getForecasts() {
-    this.http.get<WeatherForecast[]>('/weatherforecast').subscribe(
+    this.http.get<Session>('/session').subscribe(
       (result) => {
-        this.forecasts = result;
+        this.nextSession = result;
       },
       (error) => {
         console.error(error);
       }
     );
+  }
+
+  copyMessage(val: string) {
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = val;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
   }
 
   title = 'pcm.client';

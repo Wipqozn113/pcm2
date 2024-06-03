@@ -20,9 +20,10 @@ namespace PCM.Server.Controllers
         }
 
         [HttpGet(Name = "GetSession")]
-        public SessionAPIModel? Get(int SessionId)
+        public SessionAPIModel? Get()
         {
-            return SessionAPIModel.Create(_apiQueryService, SessionId);
+            return SessionAPIModel.GetNextSession(_apiQueryService);
+            //return SessionAPIModel.Create(_apiQueryService, SessionId);
         }
 
         /*[HttpGet(Name = "GetNextSession")]

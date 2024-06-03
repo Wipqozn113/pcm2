@@ -1,24 +1,25 @@
-﻿<h1 id="tableLabel">Weather forecast</h1>
+<h1 id="tableLabel">Session {{ nextSession.sessionDate }}</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
+<p *ngIf="!nextSession"><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationangular">https://aka.ms/jspsintegrationangular</a> for more details.</em></p>
 
-<p *ngIf="!forecasts"><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationangular">https://aka.ms/jspsintegrationangular</a> for more details.</em></p>
-
-<table *ngIf="forecasts">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let forecast of forecasts">
-            <td>{{ forecast.date }}</td>
-            <td>{{ forecast.temperatureC }}</td>
-            <td>{{ forecast.temperatureF }}</td>
-            <td>{{ forecast.summary }}</td>
-        </tr>
-    </tbody>
+<table *ngIf="nextSession">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Gold</th>
+      <th>Difficulty</th>
+      <th>Export</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id="{{ encounter.id }}" *ngFor="let encounter of nextSession.encounters">
+      <td>{{ encounter.name }}</td>
+      <td>{{ encounter.gold }}</td>
+      <td>{{ encounter.difficulty }}</td>
+      <td><button (click)="copyMessage('{{ encounter.name }}')" value="click to copy">Copy</button></td>
+    </tr>
+  </tbody>
 </table>
+<span id="copy-{{ encounter.id }}" style="display:none;" *ngFor="let encounter of nextSession.encounters">
+  {{ encounter.dashboardExport }}
+</span>
