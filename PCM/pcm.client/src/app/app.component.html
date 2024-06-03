@@ -16,7 +16,7 @@
       <td>{{ encounter.name }}</td>
       <td>{{ encounter.gold }}</td>
       <td>{{ encounter.difficulty }}</td>
-      <td><button (click)="copyMessage('{{ encounter.name }}')" value="click to copy">Copy</button></td>
+      <td><button [cdkCopyToClipboard]="encounter.dashboardExport" value="click to copy">Copy</button></td>
     </tr>
   </tbody>
 </table>
