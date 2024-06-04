@@ -2,6 +2,7 @@
 using PCM.Server.APIQueryService.Service;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Memory;
+using System.Globalization;
 
 namespace PCM.Server.Models
 {
@@ -30,7 +31,7 @@ namespace PCM.Server.Models
                 Gold = encounter.Gold,
                 PartyLevel = encounter.PartyLevel,
                 Name = encounter.Name,
-                Difficulty = encounter.Difficulty,
+                _difficulty = encounter.Difficulty,
                 DashboardExport = encounter.DashboardExport
             };
 
@@ -70,7 +71,19 @@ namespace PCM.Server.Models
 
         public string Name { get; set; } = string.Empty;
 
-        public string Difficulty { get; set; } = string.Empty;
+        public string Difficulty
+        {
+            get
+            {
+                return  CultureInfo.CurrentCulture.TextInfo.ToTitleCase(_difficulty.ToLower());
+            }
+            set
+            {
+                _difficulty = value;
+            }
+        }
+
+        private string _difficulty; 
 
         public string DashboardExport { get; set; } = string.Empty;
 
