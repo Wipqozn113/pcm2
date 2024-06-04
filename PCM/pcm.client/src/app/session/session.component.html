@@ -24,7 +24,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let encounter of nextSession.encounters">
-      <td>{{ encounter.name }}</td>
+      <td><a href="/enc/{{ encounter.id }}">{{ encounter.name }}</a></td>
       <td>{{ encounter.gold }}</td>
       <td>{{ encounter.difficulty }}</td>
       <td><button [cdkCopyToClipboard]="encounter.dashboardExport" value="click to copy">Copy</button></td>
