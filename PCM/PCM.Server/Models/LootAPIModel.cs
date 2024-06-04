@@ -14,15 +14,6 @@ namespace PCM.Server.Models
 
         private LootAPIModel() { }
 
-        public LootAPIModel(Loot loot) 
-        { 
-            _id = loot.Id;
-            Name = loot.Name ?? "";
-            ItemLevel = loot.Item_level;
-            Awarded = loot.Awarded;
-            Consumable = loot.Consumable;
-        }
-
         public static LootAPIModel? Create(QueryService apiQueryService, int lootId)
         {
             // If a cached entry exists, just return it
@@ -42,7 +33,8 @@ namespace PCM.Server.Models
                 Name = loot.Name ?? String.Empty,
                 ItemLevel = loot.Item_level,
                 Awarded = loot.Awarded,
-                Consumable = loot.Consumable
+                Consumable = loot.Consumable,
+                AoNUrl = loot.Url
             };
 
             Cache.Set(lootId, lt);
@@ -55,7 +47,8 @@ namespace PCM.Server.Models
         public int ItemLevel { get; set; }
         public bool Awarded { get; set; }
         public bool Consumable { get; set; }
+        public string AoNUrl { get; set; } = string.Empty;
 
-        public string EditUrl => $"{ConfigSettings.DirectusContentUrl}/loot/{_id}";
+        public string EditUrl => $"{ConfigSettings.DirectusContentUrl}/loot/{Id}";
     }
 }

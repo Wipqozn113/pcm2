@@ -1,0 +1,52 @@
+<h1 id="tableLabel">Session {{ nextSession.sessionDate }}</h1>
+
+<p *ngIf="!nextSession"><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationangular">https://aka.ms/jspsintegrationangular</a> for more details.</em></p>
+
+<h2>Overview</h2>
+<p *ngIf="nextSession">
+  {{ nextSession.overview }}
+</p>
+
+<h2>Notes</h2>
+<p *ngIf="nextSession">
+  {{ nextSession.notes }}
+</p>
+
+<h2>Encounters</h2>
+<table *ngIf="nextSession">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Gold</th>
+      <th>Difficulty</th>
+      <th>Export</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let encounter of nextSession.encounters">
+      <td>{{ encounter.name }}</td>
+      <td>{{ encounter.gold }}</td>
+      <td>{{ encounter.difficulty }}</td>
+      <td><button [cdkCopyToClipboard]="encounter.dashboardExport" value="click to copy">Copy</button></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Loot</h2>
+<table *ngIf="nextSession">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Item Level</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let loot of nextSession.loot">
+      <td><a target="_blank" href="{{ loot.aoNUrl }}">{{ loot.name }}</a></td>
+      <td>{{ loot.itemLevel }}</td>
+      <td><a target="_blank" href="{{ loot.editUrl }}">Edit</a></td>
+    </tr>
+  </tbody>
+</table>
+

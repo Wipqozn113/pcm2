@@ -1,13 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
-interface WeatherForecast {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
-}
-
 interface Session {
   sessionDate: string;
   overview: string;
@@ -33,20 +26,20 @@ interface Loot {
 }
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  selector: 'app-session',
+  templateUrl: './session.component.html',
+  styleUrl: './session.component.css'
 })
-export class AppComponent implements OnInit {
+export class SessionComponent {
   public nextSession!: Session;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.getForecasts();
+    this.getNextSession();
   }
 
-  getForecasts() {
+  getNextSession() {
     this.http.get<Session>('/session').subscribe(
       (result) => {
         this.nextSession = result;
@@ -59,3 +52,4 @@ export class AppComponent implements OnInit {
 
   title = 'pcm.client';
 }
+

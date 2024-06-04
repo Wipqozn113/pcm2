@@ -1,0 +1,54 @@
+<h1>{{ encounter.name }}</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Party Level</th>
+      <th>Difficulty</th>
+      <th>Gold</th>
+      <th>Export</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ encounter.partyLevel }}</td>
+      <td>{{ encounter.difficulty }}</td>
+      <td>{{ encounter.gold }}</td>
+      <td><button [cdkCopyToClipboard]="encounter.dashboardExport" value="click to copy">Copy</button></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Monsters</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let monster of encounter.monsters">
+      <td><a target="_blank" href="{{ monster.link }}">{{ monster.name }}</a></td>
+      <td>{{ monster.quantity }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Loot</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Level</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let loot of encounter.loot">
+      <td><a target="_blank" href="{{ loot.aoNUrl }}">{{ loot.name }}</a></td>
+      <td>{{ loot.itemLevel }}</td>
+      <td><a target="_blank" href="{{ loot.editUrl }}">Edit</a></td>
+    </tr>
+  </tbody>
+</table>
