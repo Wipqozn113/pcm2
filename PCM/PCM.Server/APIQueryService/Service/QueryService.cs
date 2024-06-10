@@ -13,6 +13,26 @@ namespace PCM.Server.APIQueryService.Service
             _baseUrl = ConfigSettings.DirectusUrl;
         }
 
+        private T? GetSingleton<T>(string itemName) where T : class
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_baseUrl);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var url = $"/items/{itemName}";
+                var response = client.GetAsync(url).Result;
+                response.EnsureSuccessStatusCode();
+                var test = response.Content.ReadAsStringAsync().Result;
+
+                var root = JsonSerializer.Deserialize<RootSingleton<T>>(response.Content.ReadAsStream(), new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return root?.Data;
+            }
+        }
+
         private List<T> GetItems<T>(string itemName, DirectusQuery query)
         {
             using (var client = new HttpClient())
@@ -78,6 +98,12 @@ namespace PCM.Server.APIQueryService.Service
                 .Where(x => DateOnly.FromDateTime(DateTime.Now) <= x.SessionDateOnly)
                 .OrderBy(x => x.SessionDateOnly)
                 .FirstOrDefault();
+        }
+
+        public CampaignInfo GetCampaignInfo()
+        {
+            var info = GetSingleton<CampaignInfo>("campaign_information");
+            return info ?? new CampaignInfo();
         }
     }
 }

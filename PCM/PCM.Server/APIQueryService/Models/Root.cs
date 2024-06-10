@@ -4,4 +4,9 @@
     {
         public List<T> Data { get; set; } = new List<T>();
     }
+
+    public class RootSingleton<T>
+    {
+        public T? Data { get; set; }
+    }
 }

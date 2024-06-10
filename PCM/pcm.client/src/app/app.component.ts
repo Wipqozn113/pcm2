@@ -1,35 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
-interface WeatherForecast {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
-}
-
-interface Session {
-  sessionDate: string;
-  overview: string;
-  notes: string;
-  encounters: Encounter[];
-  loot: Loot[];
-}
-
-interface Encounter {
-  id: number;
-  name: string;
-  gold: number;
+interface CampaignInfo {
   partyLevel: number;
-  difficulty: string;
-  dashboardExport: string;
-}
-
-interface Loot {
-  name: string;
-  itemLevel: number;
-  aoNUrl: string;
-  editUrl: string;
+  experience: number;
+  goldAwardedThisLevel: number;
+  totalGoldForThisLevel: number;
 }
 
 @Component({
@@ -38,7 +14,7 @@ interface Loot {
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-  public nextSession!: Session;
+  public campaignInfo!: CampaignInfo;
 
   constructor(private http: HttpClient) {}
 
@@ -47,9 +23,9 @@ export class AppComponent implements OnInit {
   }
 
   getForecasts() {
-    this.http.get<Session>('/session').subscribe(
+    this.http.get<CampaignInfo>('/CampaignInfo').subscribe(
       (result) => {
-        this.nextSession = result;
+        this.campaignInfo = result;
       },
       (error) => {
         console.error(error);

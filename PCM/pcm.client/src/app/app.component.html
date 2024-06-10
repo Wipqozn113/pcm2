@@ -1,6 +1,13 @@
-<div><a href="">Next Session</a>
-  | <a target="_blank" href="https://pathfinderdashboard.com/v2alpha/">Pathfinder Dashboard</a>
-  | <a target="_blank" href="https://maxiride.github.io/pf2e-encounters/#/">Encounter Builder</a></div>
+<div id="navbar">
+  <a href="">Next Session</a> |
+  <a target="_blank" href="https://pathfinderdashboard.com/v2alpha/">Pathfinder Dashboard</a> |
+  <a target="_blank" href="https://maxiride.github.io/pf2e-encounters/#/">Encounter Builder</a>
+</div>
+<div id="campaign-info">
+  <span>Party Level: {{ campaignInfo.partyLevel }}</span> |
+  <span> {{ campaignInfo.experience }} / 1000 xp</span> |
+  <span> {{ campaignInfo.goldAwardedThisLevel }} / {{ campaignInfo.totalGoldForThisLevel }} Gold</span>
+</div>
 <router-outlet></router-outlet>
 
 
